@@ -37,6 +37,14 @@
                                     <action selector="endCapture:" destination="BYZ-38-t0r" eventType="touchUpInside" id="5tO-hV-np6"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zl5-Km-oEA">
+                                <rect key="frame" x="23" y="214" width="77" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="切换摄像头"/>
+                                <connections>
+                                    <action selector="switchScene:" destination="BYZ-38-t0r" eventType="touchUpInside" id="75T-PS-iCn"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
