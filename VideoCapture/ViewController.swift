@@ -20,6 +20,7 @@ class ViewController: UIViewController {
     fileprivate var videoInput : AVCaptureDeviceInput?
     
     fileprivate var videoOutput : AVCaptureVideoDataOutput?
+    fileprivate var movieOutput : AVCaptureMovieFileOutput?
 }
 
 // MARK:- 视频的开始采集&停止采集
@@ -32,16 +33,32 @@ extension ViewController {
         // 2.设置音频的输入&输出
         setupAudio()
         
-        // 3.给用户创建一个预览图层（可选）
+        // 3.添加写入文件的output
+        let movieOutput = AVCaptureMovieFileOutput()
+        session.addOutput(movieOutput)
+        self.movieOutput = movieOutput
+        
+        // 设置写入的稳定性
+        let connection = movieOutput.connection(with: .video)
+        connection?.preferredVideoStabilizationMode = .auto
+        
+        
+        // 4.给用户创建一个预览图层（可选）
         previewLayer.frame = view.bounds
         view.layer.insertSublayer(previewLayer, at: 0)
         
-        // 4.开始采集
+        // 5.开始采集
         session.startRunning()
         
+        // 6.开始将采集到的画面写入文件中
+        let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first! + "/abc.mp4"
+        let url = URL(fileURLWithPath: path)
+        movieOutput.startRecording(to: url, recordingDelegate: self)
     }
     
     @IBAction func endCapture(_ sender: Any) {
+        movieOutput?.stopRecording()
+        
         session.stopRunning()
         previewLayer.removeFromSuperlayer()
     }
@@ -115,5 +132,14 @@ extension ViewController : AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
         }else {
             print("采集到音频")
         }
+    }
+}
+
+extension ViewController : AVCaptureFileOutputRecordingDelegate {
+    func fileOutput(_ output: AVCaptureFileOutput, didStartRecordingTo fileURL: URL, from connections: [AVCaptureConnection]) {
+        print("开始写入文件")
+    }
+    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
+        print("结束写入文件")
     }
 }
